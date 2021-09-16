@@ -3,11 +3,11 @@ import { createGlobalStyle } from 'styled-components';
 export const GlobalStyle = createGlobalStyle`
     :root {
         --background: #f0f2f5;
+        --green: #33CC95;
         --blue: #5429CC;
         --red: #E62E4D;
 
         --shape-principal: #FFFFFF;
-        --background: #F0F2F5;
         --blue-light: #6933FF;
 
 
@@ -32,21 +32,23 @@ export const GlobalStyle = createGlobalStyle`
     }
 
     body {
-        background: var(--background);
-        --webkit-font-smoothing: antialiased;
+      font-family: 'Poppins', sans-serif;
+
+      background: var(--background);
+      --webkit-font-smoothing: antialiased;
     }
 
     border-style, input, textarea, button {
-        font-family: 'Poppins', sans-serif;
-        font-weight: 400;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 400;
     }
 
     h1, h2, h3, h4, h5, h6, strong {
-        font-weight: 600;
+      font-weight: 600;
     }
 
     button {
-        cursor: pointer;
+      cursor: pointer;
     }
 
     [disabled] {
