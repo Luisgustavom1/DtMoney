@@ -1,12 +1,12 @@
 import React, { FormEvent, useState } from 'react';
 import Modal from 'react-modal';
 
-import { Container, RadioBox, TransactionTypeContainer } from './styles';
+import { useTransaction } from '../../hooks/TransactionContext';
 
+import { Container, RadioBox, TransactionTypeContainer } from './styles';
 import IconClose from '../../assets/close.svg';
 import deposit from '../../assets/income.svg';
 import outcome from '../../assets/outcome.svg';
-import api from '../../Services/api';
 
 interface NewTransactionModalProps {
   isOpen: boolean,
@@ -14,22 +14,29 @@ interface NewTransactionModalProps {
 }
 
 const NewTransactionModal: React.FC<NewTransactionModalProps> = ({ isOpen, onRequestClose }) => {
-  const [title, setTitle] = useState<string>()
-  const [price, setPrice] = useState<number>()
-  const [type, setType] = useState<'deposit' | 'withDraw'>('deposit');
-  const [category, setCategory] = useState<string>();
+  const { createTransaction } = useTransaction();
+  
+  const [title, setTitle] = useState<string>('')
+  const [price, setPrice] = useState<number>(0)
+  const [type, setType] = useState<'deposit' | 'withdraw'>('deposit');
+  const [category, setCategory] = useState<string>('');
 
-  function handleNewTransaction(e: FormEvent) {
+  async function handleNewTransaction(e: FormEvent) {
     e.preventDefault();
     
-    const data = {
+    await createTransaction({
       title,
-      price,
+      type,
       category,
-      type
-    };
+      price
+    })
 
-    api.post('/transactions', data);    
+    setTitle('');
+    setPrice(0);
+    setType('deposit');
+    setCategory('');
+
+    onRequestClose()
   }
 
   return(
@@ -67,6 +74,7 @@ const NewTransactionModal: React.FC<NewTransactionModalProps> = ({ isOpen, onReq
             onClick={() => setType('deposit')}
             isActive={type === 'deposit'}
             activeColor='green'
+            type='button'
           >
             <img 
               src={deposit}
@@ -75,9 +83,10 @@ const NewTransactionModal: React.FC<NewTransactionModalProps> = ({ isOpen, onReq
             <span>Entrada</span>
           </RadioBox>
           <RadioBox
-            onClick={() => setType('withDraw')}
-            isActive={type === 'withDraw'}
+            onClick={() => setType('withdraw')}
+            isActive={type === 'withdraw'}
             activeColor='red'
+            type='button'
           >
             <img 
               src={outcome}
